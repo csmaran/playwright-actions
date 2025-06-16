@@ -1,26 +1,26 @@
-name: Playwright Tests
-on:
+name: Playwright Tests #nome do workflow
+on: #trigger - define qnd vai ser executado
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-jobs:
+jobs: #tarefas q devem ser executadas
   test:
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest #workflow define quem vai rodar os testes/provisiona o ambiente p essa execução
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4 #uses - ativa plugin (recurso dentro do github actions)
     - uses: actions/setup-node@v4
       with:
-        node-version: lts/*
+        node-version: 18
     - name: Install dependencies
-      run: npm ci
+      run: npm install
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
+    - uses: actions/upload-artifact@v4 #pega o report HTML e publica na saida de execução do job/workflow
+      if: always ()
       with:
         name: playwright-report
         path: playwright-report/
