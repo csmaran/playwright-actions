@@ -4,6 +4,7 @@ on: #trigger - define qnd vai ser executado
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch: 
     
 jobs: #tarefas q devem ser executadas
   e2e-tests:
