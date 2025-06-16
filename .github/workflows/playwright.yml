@@ -4,23 +4,32 @@ on: #trigger - define qnd vai ser executado
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+    
 jobs: #tarefas q devem ser executadas
-  test:
+  e2e-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest #workflow define quem vai rodar os testes/provisiona o ambiente p essa execução
     steps:
-    - uses: actions/checkout@v4 #uses - ativa plugin (recurso dentro do github actions)
-    - uses: actions/setup-node@v4
+    - name: Get code
+      uses: actions/checkout@v4 #uses - ativa plugin (recurso dentro do github actions)
+
+    - name: Install node 18
+      uses: actions/setup-node@v4
       with:
         node-version: 18
+
     - name: Install dependencies
       run: npm install
+
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-    - name: Run Playwright tests
+
+    - name: Run E2E tests
       run: npx playwright test
-    - uses: actions/upload-artifact@v4 #pega o report HTML e publica na saida de execução do job/workflow
-      if: always ()
+
+    - name: Publish HTML report
+      uses: actions/upload-artifact@v4 #pega o report HTML e publica na saida de execução do job/workflow
+      if: always () #o report vai ser publicado mesmo se houver erros na exec
       with:
         name: playwright-report
         path: playwright-report/
